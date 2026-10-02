@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth, Role } from './auth';
 
+import LandingPage from './pages/LandingPage';
 import MapPage from './pages/MapPage';
 import ReportPage from './pages/ReportPage';
 import MyReportsPage from './pages/MyReportsPage';
@@ -17,7 +18,7 @@ function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { to: '/', label: 'Explore Map' },
+    { to: '/map', label: 'Explore Map' },
     { to: '/report', label: 'Report Issue' },
     { to: '/my-reports', label: 'My Reports' },
   ];
@@ -53,7 +54,7 @@ function Header() {
               to={link.to} 
               onClick={() => setMobileMenuOpen(false)}
               className={`p-4 md:px-6 md:py-4 border-b md:border-b-0 md:border-r border-line font-bold text-sm hover:bg-inset transition-none ${
-                location.pathname === link.to || (link.to !== '/' && location.pathname.startsWith(link.to))
+                location.pathname === link.to || (link.to !== '/' && location.pathname === link.to)
                   ? 'bg-inset text-brand' 
                   : 'text-ink'
               }`}
@@ -120,8 +121,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<MapPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route element={<Layout />}>
+          <Route path="map" element={<MapPage />} />
           <Route path="report" element={<ReportPage />} />
           <Route path="my-reports" element={<MyReportsPage />} />
           <Route path="terms" element={<TermsPage />} />
