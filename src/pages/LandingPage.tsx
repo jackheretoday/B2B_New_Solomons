@@ -6,6 +6,7 @@ import before1 from '../assets/pothole images before & affter/Before-1.png';
 import after1 from '../assets/pothole images before & affter/After-1.png';
 import before2 from '../assets/pothole images before & affter/Before-2.png';
 import after2 from '../assets/pothole images before & affter/After-2.png';
+import heroBgVideo from '../assets/landing_page video/bg_video_trimmed.mp4';
 
 function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => void, onSuccess: () => void, initialIntention: 'report' | 'track' | 'login' }) {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -79,7 +80,7 @@ function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => vo
     <div className="fixed inset-0 bg-ink/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
       <div className="bg-paper border border-line shadow-2xl max-w-[900px] w-full flex flex-col md:flex-row relative">
         <button onClick={onClose} className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center font-bold text-xl hover:bg-inset z-10">&times;</button>
-        
+
         {/* Left Side - Branding */}
         <div className="hidden md:flex flex-col justify-between w-1/2 bg-surface border-r border-line p-10">
           <div>
@@ -110,13 +111,13 @@ function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => vo
             <div className="animate-fade-in">
               <h2 className="font-serif text-3xl font-bold mb-2">Sign in to continue</h2>
               <p className="text-ink-muted mb-8">Use your mobile number to securely sign in.</p>
-              
+
               <form onSubmit={handleSendOtp}>
                 <label className="block text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Mobile Number</label>
                 <div className="flex border border-line focus-within:border-brand bg-surface mb-2 transition-colors">
                   <div className="px-4 py-4 border-r border-line font-bold text-ink-muted bg-inset">+91</div>
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     className="flex-1 bg-transparent px-4 py-4 focus:outline-none font-mono text-lg tracking-wider"
                     placeholder="00000 00000"
                     value={phone}
@@ -126,9 +127,9 @@ function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => vo
                   />
                 </div>
                 {error && <p className="text-status-reported text-xs font-bold mb-4">{error}</p>}
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   disabled={loading || phone.length < 10}
                   className="w-full bg-brand text-paper font-bold py-4 mt-6 hover:bg-ink disabled:opacity-50 disabled:hover:bg-brand transition-none"
                 >
@@ -142,8 +143,8 @@ function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => vo
           ) : (
             <div className="animate-fade-in">
               <h2 className="font-serif text-3xl font-bold mb-2">Enter verification code</h2>
-              <p className="text-ink-muted mb-8">We've sent a 6-digit code to <span className="font-bold text-ink">+91 {phone.slice(0,5)} {phone.slice(5)}</span></p>
-              
+              <p className="text-ink-muted mb-8">We've sent a 6-digit code to <span className="font-bold text-ink">+91 {phone.slice(0, 5)} {phone.slice(5)}</span></p>
+
               <form onSubmit={handleVerify}>
                 <div className="flex gap-2 justify-between mb-4">
                   {otp.map((digit, i) => (
@@ -162,24 +163,24 @@ function AuthModal({ onClose, onSuccess, initialIntention }: { onClose: () => vo
                   ))}
                 </div>
                 {error && <p className="text-status-reported text-xs font-bold mb-4">{error}</p>}
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   disabled={loading || otp.join('').length < 6}
                   className="w-full bg-brand text-paper font-bold py-4 mt-4 hover:bg-ink disabled:opacity-50 disabled:hover:bg-brand transition-none"
                 >
                   {loading ? 'Verifying...' : 'Verify & Continue'}
                 </button>
               </form>
-              
+
               <div className="mt-8 flex flex-col items-center gap-4 text-sm font-bold">
-                <button onClick={() => { setStep('phone'); setOtp(['','','','','','']); setError(''); }} className="text-ink-muted hover:text-ink underline">
+                <button onClick={() => { setStep('phone'); setOtp(['', '', '', '', '', '']); setError(''); }} className="text-ink-muted hover:text-ink underline">
                   Change mobile number
                 </button>
                 {timeLeft > 0 ? (
                   <span className="text-ink-muted">Resend OTP in 00:{timeLeft.toString().padStart(2, '0')}</span>
                 ) : (
-                  <button onClick={(e) => { setOtp(['','','','','','']); handleSendOtp(e); }} className="text-brand hover:text-ink underline">
+                  <button onClick={(e) => { setOtp(['', '', '', '', '', '']); handleSendOtp(e); }} className="text-brand hover:text-ink underline">
                     Resend OTP
                   </button>
                 )}
@@ -205,7 +206,7 @@ function WorkflowAnimation() {
       },
       { threshold: 0.5 }
     );
-    
+
     document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
     return () => observer.disconnect();
   }, []);
@@ -221,9 +222,9 @@ function WorkflowAnimation() {
     <div className="max-w-md mx-auto relative py-4">
       {/* Vertical connecting line */}
       <div className="absolute left-6 md:left-[2.75rem] top-8 bottom-8 w-[2px] bg-line z-0"></div>
-      
+
       {steps.map((step, i) => (
-        <div 
+        <div
           key={step.num}
           className="animate-on-scroll opacity-0 translate-y-8 transition-all duration-700 ease-out flex gap-6 relative z-10 mb-12 last:mb-0 group"
           style={{ transitionDelay: `${i * 150}ms` }}
@@ -281,10 +282,13 @@ export default function LandingPage() {
       </header>
 
       <main className="flex-1">
-        
+
         {/* Hero Section */}
         <section className="py-20 md:py-32 px-4 border-b border-line relative overflow-hidden bg-surface">
-          <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-ink) 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+          <div className="absolute inset-0 z-0 opacity-60 pointer-events-none">
+            <video src={heroBgVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+          </div>
+          <div className="absolute inset-0 opacity-5 pointer-events-none z-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--color-ink) 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
           <div className="max-w-4xl mx-auto text-center relative z-10">
             <p className="text-xs font-bold text-brand uppercase tracking-widest mb-6">Public Infrastructure • Citizen Reporting</p>
             <h1 className="font-serif text-5xl md:text-7xl font-bold tracking-tight mb-8 leading-tight">
@@ -349,20 +353,20 @@ export default function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
+
               {/* Example 1 */}
               <div className="border border-line bg-surface flex flex-col">
                 <div className="grid grid-cols-2 border-b border-line">
                   <div className="relative p-2 border-r border-line">
                     <div className="absolute top-4 left-4 bg-paper text-ink border border-line text-xs font-bold px-2 py-1 uppercase tracking-widest z-10">Before</div>
                     <div className="aspect-[4/3] bg-ink/5 relative overflow-hidden flex items-center justify-center">
-                       <img src={before1} alt="Before repair" className="w-full h-full object-cover" />
+                      <img src={before1} alt="Before repair" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div className="relative p-2">
                     <div className="absolute top-4 left-4 bg-brand text-paper text-xs font-bold px-2 py-1 uppercase tracking-widest z-10">After</div>
                     <div className="aspect-[4/3] bg-status-resolved/10 relative overflow-hidden flex items-center justify-center">
-                       <img src={after1} alt="After repair" className="w-full h-full object-cover" />
+                      <img src={after1} alt="After repair" className="w-full h-full object-cover" />
                     </div>
                   </div>
                 </div>
@@ -396,13 +400,13 @@ export default function LandingPage() {
                   <div className="relative p-2 border-r border-line">
                     <div className="absolute top-4 left-4 bg-paper text-ink border border-line text-xs font-bold px-2 py-1 uppercase tracking-widest z-10">Before</div>
                     <div className="aspect-[4/3] bg-ink/5 relative overflow-hidden flex items-center justify-center">
-                       <img src={before2} alt="Before repair" className="w-full h-full object-cover" />
+                      <img src={before2} alt="Before repair" className="w-full h-full object-cover" />
                     </div>
                   </div>
                   <div className="relative p-2">
                     <div className="absolute top-4 left-4 bg-brand text-paper text-xs font-bold px-2 py-1 uppercase tracking-widest z-10">After</div>
                     <div className="aspect-[4/3] bg-status-resolved/10 relative overflow-hidden flex items-center justify-center">
-                       <img src={after2} alt="After repair" className="w-full h-full object-cover" />
+                      <img src={after2} alt="After repair" className="w-full h-full object-cover" />
                     </div>
                   </div>
                 </div>
@@ -471,7 +475,7 @@ export default function LandingPage() {
             <div>
               <h3 className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-6">For Citizens</h3>
               <ul className="space-y-4 text-sm font-bold">
-                <li><button onClick={() => window.scrollTo(0,0)} className="hover:underline">Home</button></li>
+                <li><button onClick={() => window.scrollTo(0, 0)} className="hover:underline">Home</button></li>
                 <li><button onClick={() => setAuthIntention('report')} className="hover:underline">Report an Issue</button></li>
                 <li><button onClick={() => setAuthIntention('track')} className="hover:underline">Track Complaint</button></li>
                 <li><button onClick={() => scrollTo('how-it-works')} className="hover:underline">How It Works</button></li>
@@ -493,7 +497,7 @@ export default function LandingPage() {
       </footer>
 
       {authIntention && (
-        <AuthModal 
+        <AuthModal
           initialIntention={authIntention}
           onClose={() => setAuthIntention(null)}
           onSuccess={handleAuthSuccess}
