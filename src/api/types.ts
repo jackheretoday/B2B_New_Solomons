@@ -25,8 +25,17 @@ export interface Issue {
   duplicate_status?: 'pending' | 'confirmed' | 'dismissed';
   report_count: number;
   created_at: string;
+
   history: IssueHistory[];
+  ai_verified?: boolean;
+  ai_confidence?: number;
+  ai_detection_count?: number;
+  ai_annotated_url?: string;
+  resolved_photo_url?: string;
+  assigned_worker?: string;
+  assigned_department?: string;
 }
+
 
 export interface ResolutionStats {
   open: number;

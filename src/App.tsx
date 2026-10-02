@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, Outlet, useLocation } from 'react-router-dom';
 import { useAuth, Role } from './auth';
+import { seedSupabaseIfEmpty } from './api/seedSupabase';
 
 import LandingPage from './pages/LandingPage';
 import MapPage from './pages/MapPage';
@@ -89,35 +90,42 @@ function Layout() {
   const { role } = useAuth();
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isMapRoute = location.pathname === '/map';
 
   return (
-    <div className={`min-h-[100dvh] flex flex-col bg-paper text-ink font-sans ${isAdminRoute ? 'text-[18px]' : 'text-base'}`}>
+    <div className={`h-[100dvh] max-h-[100dvh] flex flex-col bg-paper text-ink font-sans overflow-hidden ${isAdminRoute ? 'text-[18px]' : 'text-base'}`}>
       <Header />
       
-      <main className="flex-1 flex flex-col relative overflow-hidden">
+      <main className={`flex-1 flex flex-col relative min-h-0 ${isMapRoute ? 'overflow-hidden' : 'overflow-y-auto'}`}>
         <Outlet context={{ role }} />
+        
+        {!isMapRoute && (
+          <footer className="bg-surface border-t border-line p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-ink-muted text-sm shrink-0 z-10 mt-auto">
+            <div className="font-bold">
+              &copy; {new Date().getFullYear()} FixMeraMarg Civic Tech
+            </div>
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+              <Link to="/terms" className="hover:text-ink font-bold hover:underline">Terms of Use</Link>
+              <Link to="/privacy" className="hover:text-ink font-bold hover:underline">Privacy Policy</Link>
+              <button 
+                onClick={() => { localStorage.removeItem('issues'); window.location.reload(); }} 
+                className="hover:text-ink font-bold hover:underline cursor-pointer"
+              >
+                Reset Demo Data
+              </button>
+            </div>
+          </footer>
+        )}
       </main>
-
-      <footer className="bg-surface border-t border-line p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 text-ink-muted text-sm shrink-0 z-10">
-        <div className="font-bold">
-          &copy; {new Date().getFullYear()} FixMeraMarg Civic Tech
-        </div>
-        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-          <Link to="/terms" className="hover:text-ink font-bold hover:underline">Terms of Use</Link>
-          <Link to="/privacy" className="hover:text-ink font-bold hover:underline">Privacy Policy</Link>
-          <button 
-            onClick={() => { localStorage.removeItem('issues'); window.location.reload(); }} 
-            className="hover:text-ink font-bold hover:underline"
-          >
-            Reset Demo Data
-          </button>
-        </div>
-      </footer>
     </div>
   );
 }
 
 export default function App() {
+  useEffect(() => {
+    seedSupabaseIfEmpty();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

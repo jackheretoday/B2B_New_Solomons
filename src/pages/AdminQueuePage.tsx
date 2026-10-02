@@ -84,20 +84,36 @@ function AdminIssuePanel({ issue, onClose, onUpdate, issues }: { issue: Issue, o
   const [department, setDepartment] = useState(issue.department_id || getDeptForCategory(issue.category));
   const [priority, setPriority] = useState<IssuePriority>(issue.priority || issue.suggested_priority || 'Low');
   const [saving, setSaving] = useState(false);
+  const [resolvedPhoto, setResolvedPhoto] = useState<string>('');
 
   const steps: IssueStatus[] = ['Reported', 'Assigned', 'In Progress', 'Resolved'];
   const currentIndex = steps.indexOf(issue.status);
+
+  const handleResolvedPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setResolvedPhoto(reader.result as string);
+    reader.readAsDataURL(file);
+  };
 
   const handleNextStatus = async () => {
     if (currentIndex >= steps.length - 1) return;
     const nextStatus = steps[currentIndex + 1];
     
-    setSaving(true);
-    await api.updateIssue(issue.id, { 
+    const updates: Partial<Issue> = {
       status: nextStatus,
       department_id: department,
-      priority: priority
-    }, role);
+      priority: priority,
+    };
+
+    // Include resolved photo when marking as Resolved
+    if (nextStatus === 'Resolved' && resolvedPhoto) {
+      updates.resolved_photo_url = resolvedPhoto;
+    }
+
+    setSaving(true);
+    await api.updateIssue(issue.id, updates, role);
     setSaving(false);
     onUpdate();
   };
@@ -191,6 +207,25 @@ function AdminIssuePanel({ issue, onClose, onUpdate, issues }: { issue: Issue, o
           </div>
         </div>
 
+        {issue.ai_verified !== undefined && (
+          <div className="border border-line bg-paper p-4">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs font-bold text-ink-muted uppercase tracking-widest">AI Model Verification</span>
+              <span className={`text-xs font-bold px-2 py-0.5 border ${
+                issue.ai_verified 
+                  ? 'border-status-resolved text-status-resolved' 
+                  : 'border-status-reported text-status-reported'
+              }`}>
+                {issue.ai_verified ? 'VERIFIED REAL ISSUE' : 'UNVERIFIED'}
+              </span>
+            </div>
+            <div className="text-xs text-ink-muted mt-2 flex gap-4">
+              {issue.ai_confidence && <span>Confidence: <strong>{issue.ai_confidence}%</strong></span>}
+              {issue.ai_detection_count !== undefined && <span>Detections: <strong>{issue.ai_detection_count}</strong></span>}
+            </div>
+          </div>
+        )}
+
         <div>
           <h3 className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Evidence & Description</h3>
           <div className="bg-paper border border-line">
@@ -202,6 +237,7 @@ function AdminIssuePanel({ issue, onClose, onUpdate, issues }: { issue: Issue, o
             <p className="p-4 text-sm">{issue.description || <span className="text-ink-muted italic">No description</span>}</p>
           </div>
         </div>
+
         
         <div>
           <h3 className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">Location</h3>
@@ -265,12 +301,32 @@ function AdminIssuePanel({ issue, onClose, onUpdate, issues }: { issue: Issue, o
             <label className="block text-xs font-bold text-ink-muted uppercase tracking-widest mb-4">Advance Status</label>
             {currentIndex < steps.length - 1 ? (
               <div>
+                {/* Show resolved photo upload when about to mark as Resolved */}
+                {steps[currentIndex + 1] === 'Resolved' && (
+                  <div className="mb-4 border border-line bg-surface p-4">
+                    <label className="block text-xs font-bold text-ink-muted uppercase tracking-widest mb-2">
+                      Upload Resolved Photo (Proof of Repair)
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleResolvedPhotoUpload}
+                      className="w-full text-sm font-bold text-ink file:mr-4 file:py-2 file:px-4 file:border file:border-line file:text-sm file:font-bold file:bg-paper file:text-ink hover:file:bg-inset"
+                    />
+                    {resolvedPhoto && (
+                      <div className="mt-3">
+                        <img src={resolvedPhoto} alt="Resolved preview" className="w-full h-32 object-cover border border-line" />
+                        <p className="text-xs text-status-resolved font-bold mt-1">Photo ready to attach</p>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <button 
                   onClick={handleNextStatus} 
                   disabled={saving || !canAdvance().valid}
                   className="w-full bg-brand text-paper py-3 font-bold hover:bg-ink disabled:opacity-50 disabled:hover:bg-brand"
                 >
-                  Mark as {steps[currentIndex + 1]}
+                  {saving ? 'Saving...' : `Mark as ${steps[currentIndex + 1]}`}
                 </button>
                 {!canAdvance().valid && (
                   <p className="text-xs text-status-reported mt-2 font-bold text-center">{canAdvance().reason}</p>
@@ -279,6 +335,12 @@ function AdminIssuePanel({ issue, onClose, onUpdate, issues }: { issue: Issue, o
             ) : (
               <div className="bg-surface border border-line p-3 text-center text-sm font-bold text-status-resolved">
                 Issue is Fully Resolved
+                {issue.resolved_photo_url && (
+                  <div className="mt-3">
+                    <img src={issue.resolved_photo_url} alt="Resolved" className="w-full h-32 object-cover border border-line" />
+                    <p className="text-xs text-ink-muted mt-1">Repair evidence uploaded</p>
+                  </div>
+                )}
               </div>
             )}
           </div>

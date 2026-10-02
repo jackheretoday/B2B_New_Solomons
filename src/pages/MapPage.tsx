@@ -60,24 +60,17 @@ const createCustomIcon = (category: string, status: IssueStatus, isSelected: boo
 function Stepper({ currentStatus }: { currentStatus: IssueStatus }) {
   const steps: IssueStatus[] = ['Reported', 'Assigned', 'In Progress', 'Resolved'];
   const currentIndex = steps.indexOf(currentStatus);
-  
+
   return (
     <div className="flex justify-between items-center relative my-8">
       <div className="absolute top-2.5 left-0 right-0 h-[2px] bg-line -z-10"></div>
       {steps.map((step, idx) => {
         const isCurrent = idx === currentIndex;
         const isPast = idx < currentIndex;
-        
-        let bgColor = 'bg-surface';
-        let borderColor = 'border-line';
-        if (isCurrent || isPast) {
-          bgColor = 'bg-surface';
-          borderColor = `border-[${statusColors[step]}]`; // We'll apply inline style for precise color
-        }
 
         return (
           <div key={step} className="flex flex-col items-center bg-surface px-1">
-            <div 
+            <div
               className={`w-5 h-5 border-[3px] rounded-full mb-2 bg-surface`}
               style={(isCurrent || isPast) ? { borderColor: statusColors[step] } : { borderColor: 'var(--color-line)' }}
             >
@@ -113,7 +106,7 @@ function IssueMarkers({ issues, selectedIssue, setSelectedIssue, showHeatmap }: 
       });
       map.addLayer(clusterGroupRef.current);
     }
-    
+
     const cg = clusterGroupRef.current;
     cg.clearLayers();
     markersMap.current = {};
@@ -125,7 +118,7 @@ function IssueMarkers({ issues, selectedIssue, setSelectedIssue, showHeatmap }: 
         radius: 25,
         blur: 15,
         maxZoom: 17,
-        gradient: {0.4: 'rgba(166,58,43,0.2)', 0.6: 'rgba(166,58,43,0.5)', 0.8: 'rgba(166,58,43,0.8)', 1: '#A63A2B'}
+        gradient: { 0.4: 'rgba(166,58,43,0.2)', 0.6: 'rgba(166,58,43,0.5)', 0.8: 'rgba(166,58,43,0.8)', 1: '#A63A2B' }
       }).addTo(map);
       map.removeLayer(cg);
     } else {
@@ -151,7 +144,7 @@ function IssueMarkers({ issues, selectedIssue, setSelectedIssue, showHeatmap }: 
       cg.addLayers(markers);
     }
 
-    return () => {};
+    return () => { };
   }, [issues, map, showHeatmap, selectedIssue, setSelectedIssue]);
 
   return null;
@@ -171,16 +164,16 @@ export default function MapPage() {
 
   useEffect(() => {
     setIsLoading(true);
-    api.getIssues({ 
-      category: filterCategory || undefined, 
-      status: (filterStatus as IssueStatus) || undefined 
+    api.getIssues({
+      category: filterCategory || undefined,
+      status: (filterStatus as IssueStatus) || undefined
     }).then(data => {
       // Filter by search query if present
       let filtered = data;
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        filtered = data.filter(i => 
-          i.id.toLowerCase().includes(q) || 
+        filtered = data.filter(i =>
+          i.id.toLowerCase().includes(q) ||
           i.category.toLowerCase().includes(q) ||
           i.description.toLowerCase().includes(q)
         );
@@ -192,19 +185,19 @@ export default function MapPage() {
 
   return (
     <div className="flex-1 flex flex-col md:flex-row relative bg-paper h-full overflow-hidden">
-      
+
       {/* Mobile Filter Toggle & Search Bar Overlay */}
       <div className="absolute top-4 left-4 right-4 md:left-[280px] lg:left-[340px] flex items-center gap-2 z-[400] pointer-events-none">
-        <button 
+        <button
           onClick={() => setShowFiltersMobile(!showFiltersMobile)}
           className="md:hidden bg-brand text-paper p-3 border border-brand font-bold pointer-events-auto shadow-sm"
         >
           Filters
         </button>
         <div className="flex-1 max-w-md bg-surface border border-line flex items-center pointer-events-auto shadow-sm">
-          <input 
-            type="text" 
-            placeholder="Search location, ID, or issue..." 
+          <input
+            type="text"
+            placeholder="Search location, ID, or issue..."
             className="w-full bg-transparent p-3 text-sm focus:outline-none"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
@@ -223,23 +216,23 @@ export default function MapPage() {
           <h1 className="font-serif text-xl font-bold">Filters</h1>
           <button onClick={() => setShowFiltersMobile(false)} className="text-xl font-bold">&times;</button>
         </div>
-        
+
         <h1 className="font-serif text-xl font-bold hidden md:block tracking-wide">Explore Issues</h1>
-        
+
         <div className="space-y-5 flex-1">
           <div>
             <label className="block text-xs font-bold text-ink-muted mb-2 uppercase tracking-wider">Category</label>
             <div className="space-y-1">
-              <button 
-                onClick={() => setFilterCategory('')} 
+              <button
+                onClick={() => setFilterCategory('')}
                 className={`w-full text-left p-2 border flex items-center justify-between text-sm ${filterCategory === '' ? 'border-brand bg-paper font-bold' : 'border-transparent hover:bg-inset text-ink-muted'}`}
               >
                 All Categories
               </button>
               {Object.keys(glyphs).map(c => (
-                <button 
+                <button
                   key={c}
-                  onClick={() => setFilterCategory(c)} 
+                  onClick={() => setFilterCategory(c)}
                   className={`w-full text-left p-2 border flex items-center gap-3 text-sm capitalize ${filterCategory === c ? 'border-brand bg-paper font-bold' : 'border-transparent hover:bg-inset text-ink-muted'}`}
                 >
                   <img src={glyphs[c]} className="w-4 h-4 opacity-70" alt="" />
@@ -254,16 +247,16 @@ export default function MapPage() {
           <div>
             <label className="block text-xs font-bold text-ink-muted mb-2 uppercase tracking-wider">Status</label>
             <div className="space-y-1">
-              <button 
-                onClick={() => setFilterStatus('')} 
+              <button
+                onClick={() => setFilterStatus('')}
                 className={`w-full text-left p-2 border flex items-center justify-between text-sm ${filterStatus === '' ? 'border-brand bg-paper font-bold' : 'border-transparent hover:bg-inset text-ink-muted'}`}
               >
                 All Statuses
               </button>
               {Object.keys(statusColors).map(s => (
-                <button 
+                <button
                   key={s}
-                  onClick={() => setFilterStatus(s)} 
+                  onClick={() => setFilterStatus(s)}
                   className={`w-full text-left p-2 border flex items-center gap-3 text-sm ${filterStatus === s ? 'border-brand bg-paper font-bold' : 'border-transparent hover:bg-inset text-ink-muted'}`}
                 >
                   <div className="w-3 h-3 border-[2px]" style={{ borderRadius: '9999px', borderColor: statusColors[s as IssueStatus], backgroundColor: 'var(--color-surface)' }}></div>
@@ -272,9 +265,9 @@ export default function MapPage() {
               ))}
             </div>
           </div>
-          
+
           <div className="w-full h-px bg-line"></div>
-          
+
           <label className="flex items-center gap-3 cursor-pointer group">
             <div className={`w-5 h-5 border flex items-center justify-center ${showHeatmap ? 'bg-brand border-brand' : 'bg-paper border-line group-hover:border-ink'}`}>
               {showHeatmap && <div className="w-2.5 h-2.5 bg-paper"></div>}
@@ -290,10 +283,10 @@ export default function MapPage() {
           </Link>
         </div>
       </div>
-      
+
       {/* Mobile Sidebar Overlay */}
       {showFiltersMobile && (
-        <div 
+        <div
           className="absolute inset-0 bg-ink/20 z-[450] md:hidden"
           onClick={() => setShowFiltersMobile(false)}
         />
@@ -307,34 +300,14 @@ export default function MapPage() {
             <p className="mt-4 font-bold text-brand">Loading map data...</p>
           </div>
         )}
-        
-        <MapContainer center={[19.0760, 72.8777]} zoom={13} className="w-full h-full z-10" style={{ backgroundColor: 'transparent' }} zoomControl={false}>
+
+        <MapContainer center={[19.0760, 72.8777]} zoom={13} className="w-full h-full z-10" style={{ backgroundColor: 'transparent' }} zoomControl={true}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <IssueMarkers issues={issues} selectedIssue={selectedIssue} setSelectedIssue={setSelectedIssue} showHeatmap={showHeatmap} />
         </MapContainer>
-
-        {/* Floating Zoom Controls */}
-        <div className="absolute bottom-6 right-6 flex flex-col bg-surface border border-line z-[400] shadow-sm">
-          <button 
-            className="w-10 h-10 flex items-center justify-center text-xl font-bold border-b border-line hover:bg-inset"
-            onClick={() => {
-              const map = document.querySelector('.leaflet-container') as any;
-              if (map && map._leaflet_id) {
-                const lMap = (window as any).L.DomUtil.get(map)._leaflet_id;
-                // This is a hacky way to zoom without full ref setup, better to use useMap but we're outside MapContainer context here. 
-                // We rely on Leaflet's built in zoom control ideally, but we disabled it to style our own. 
-                // Let's just use CSS for visual placement, but actually we can just enable Leaflet's zoom and style it, or leave it.
-                // We'll leave it as a visual placeholder for now if real zoom is complex to wire up here.
-              }
-            }}
-          >
-            +
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center text-xl font-bold hover:bg-inset">−</button>
-        </div>
       </div>
 
       {/* Issue Detail Panel */}
@@ -342,7 +315,7 @@ export default function MapPage() {
         <div className="absolute inset-x-0 bottom-0 md:inset-y-0 md:left-auto md:right-0 md:w-[400px] bg-surface md:border-l border-t md:border-t-0 border-line z-[600] flex flex-col h-[60vh] md:h-full shadow-2xl transition-transform duration-300 transform translate-y-0">
           <div className="p-4 border-b border-line flex justify-between items-center bg-paper sticky top-0">
             <span className="text-xs font-bold text-ink-muted tracking-widest uppercase">Issue Details</span>
-            <button 
+            <button
               className="w-8 h-8 flex items-center justify-center border border-line hover:bg-inset font-bold"
               onClick={() => setSelectedIssue(null)}
               aria-label="Close panel"
@@ -350,14 +323,14 @@ export default function MapPage() {
               &times;
             </button>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto p-6 space-y-8">
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <img src={glyphs[selectedIssue.category] || glyphs.other} className="w-6 h-6" alt="" />
                 <h2 className="font-serif text-3xl font-bold capitalize leading-none tracking-tight">{selectedIssue.category}</h2>
               </div>
-              
+
               <div className="flex flex-wrap gap-2 mb-4">
                 <div className="px-2 py-1 border border-line flex items-center gap-2 bg-paper">
                   <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: statusColors[selectedIssue.status] }}></div>
@@ -365,7 +338,7 @@ export default function MapPage() {
                 </div>
                 {selectedIssue.priority && (
                   <div className="px-2 py-1 border border-line bg-paper text-sm font-bold flex items-center gap-1">
-                    <span className="text-ink-muted">Priority:</span> 
+                    <span className="text-ink-muted">Priority:</span>
                     <span className={selectedIssue.priority === 'Critical' ? 'text-status-reported' : ''}>{selectedIssue.priority}</span>
                   </div>
                 )}
@@ -386,7 +359,7 @@ export default function MapPage() {
                 No visual evidence provided
               </div>
             )}
-            
+
             <div>
               <h3 className="text-xs font-bold text-ink-muted uppercase tracking-wider mb-2">Description</h3>
               <p className="text-ink leading-relaxed text-sm bg-paper p-4 border border-line">{selectedIssue.description}</p>
@@ -412,7 +385,7 @@ export default function MapPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="pt-4 pb-8">
               <Link to={`/report?duplicate=${selectedIssue.id}`} className="block w-full text-center border-2 border-brand text-brand font-bold py-3 hover:bg-brand hover:text-paper transition-none">
                 Report Similar Issue Here

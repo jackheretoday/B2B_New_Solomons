@@ -243,4 +243,5 @@ class MockApi implements ApiInterface {
   }
 }
 
-export const api = new MockApi();
+export const mockApi = new MockApi();
+export { api, SupabaseApi } from './supabaseAdapter';

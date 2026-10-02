@@ -119,6 +119,11 @@ export default function MyReportsPage() {
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h2 className="font-serif text-2xl font-bold capitalize">{issue.category}</h2>
+                    {issue.ai_verified && (
+                      <span className="text-xs font-bold border border-status-resolved text-status-resolved px-2 py-0.5 bg-paper">
+                        AI Verified ({issue.ai_confidence ? `${issue.ai_confidence}%` : 'Valid'})
+                      </span>
+                    )}
                     {issue.priority && (
                       <span className="text-xs font-bold border border-line px-2 py-0.5 bg-paper text-ink-muted">
                         {issue.priority} Priority
@@ -127,6 +132,7 @@ export default function MyReportsPage() {
                   </div>
                   <p className="text-sm font-mono text-ink-muted mb-1">ID: {issue.id}</p>
                   <p className="text-sm text-ink-muted">{new Date(issue.created_at).toLocaleDateString()} &middot; {issue.lat.toFixed(5)}, {issue.lng.toFixed(5)}</p>
+
                 </div>
                 
                 {issue.duplicate_status === 'confirmed' && (
@@ -153,10 +159,24 @@ export default function MyReportsPage() {
               </div>
             </div>
 
-            {/* Right side: Timeline */}
+            {/* Right side: Timeline + Resolved Photo */}
             <div className="w-full md:w-72 shrink-0 p-6 md:p-8 bg-paper">
               <h3 className="text-xs font-bold text-ink-muted uppercase tracking-widest mb-6">Status Tracker</h3>
               <StatusTimeline history={issue.history} currentStatus={issue.status} />
+
+              {issue.status === 'Resolved' && issue.resolved_photo_url && (
+                <div className="mt-6 border border-status-resolved p-2">
+                  <p className="text-xs font-bold text-status-resolved uppercase tracking-widest mb-2">Repair Proof</p>
+                  <img src={issue.resolved_photo_url} alt="Resolved" className="w-full h-32 object-cover border border-line" />
+                </div>
+              )}
+
+              {issue.status === 'Resolved' && (
+                <div className="mt-4 bg-surface border border-status-resolved p-3 text-center">
+                  <p className="text-sm font-bold text-status-resolved">Issue Resolved</p>
+                  <p className="text-xs text-ink-muted mt-1">This issue has been fixed and removed from the map.</p>
+                </div>
+              )}
             </div>
           </div>
         ))}

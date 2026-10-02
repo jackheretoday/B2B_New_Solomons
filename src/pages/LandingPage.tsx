@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth, Role } from '../auth';
+import { useAuth } from '../auth';
 
 import before1 from '../assets/pothole images before & affter/Before-1.png';
 import after1 from '../assets/pothole images before & affter/After-1.png';
