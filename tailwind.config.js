@@ -1,0 +1,63 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    colors: {
+      paper: '#ECE8DF',
+      surface: '#F5F2EB',
+      inset: '#E3DED3',
+      line: '#C9C2B3',
+      ink: '#1F2328',
+      'ink-muted': '#565B60',
+      brand: '#0F5257',
+      'status-reported': '#A63A2B',
+      'status-assigned': '#9A6A12',
+      'status-progress': '#2A5C8F',
+      'status-resolved': '#2F6B45',
+      transparent: 'transparent',
+    },
+    fontFamily: {
+      sans: ['"Public Sans"', 'sans-serif'],
+      serif: ['"Source Serif 4"', 'serif'],
+    },
+    borderRadius: {
+      none: '0',
+      DEFAULT: '2px',
+      full: '9999px',
+    },
+    borderWidth: {
+      0: '0',
+      DEFAULT: '1px',
+      2: '2px',
+      3: '3px',
+    },
+    spacing: {
+      0: '0px',
+      px: '1px',
+      1: '4px',
+      2: '8px',
+      3: '12px',
+      4: '16px',
+      5: '20px',
+      6: '24px',
+      8: '32px',
+      10: '40px',
+      12: '48px',
+      16: '64px',
+      20: '80px',
+      24: '96px',
+      32: '128px',
+      40: '160px',
+      48: '192px',
+      56: '224px',
+      64: '256px',
+    },
+    animation: {
+      pulse: 'pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+    },
+  },
+  plugins: [],
+}

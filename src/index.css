@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --leaflet-tile-filter: saturate(0.55) sepia(0.12);
+  }
+  
+  /* Keyboard focus style globally */
+  *:focus-visible {
+    outline: 2px solid theme('colors.ink') !important;
+    outline-offset: 2px !important;
+  }
+}
+
+@layer utilities {
+  .animate-pulse {
+    animation: pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Map filters */
+.leaflet-tile-pane {
+  filter: var(--leaflet-tile-filter);
+}
